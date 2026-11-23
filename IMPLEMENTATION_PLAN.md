@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-O repositório iniciou sem código. A homepage e o portal do cliente são a primeira fatia visual do produto. Os dados e acções do dashboard são locais e demonstrativos.
+O repositório iniciou sem código. A homepage oficial e o portal do cliente são a primeira fatia visual do produto. A homepage foi ajustada à composição da referência e recebeu um recorte optimizado da ilustração de servidores. Os dados e acções do dashboard são locais e demonstrativos.
 
 ## Fases
 
