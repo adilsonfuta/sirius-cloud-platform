@@ -2,8 +2,8 @@
 
 | Área | Funcionalidade | Estado | Tipo / observação |
 |---|---|---|---|
-| Website | Homepage alinhada à referência, secções de produto/preços | IMPLEMENTED | Visual; arte panorâmica de servidores; mensagem para programadores sobre Git/previews e acesso sem cartão; preços demonstrativos. Git, previews e pagamentos ainda não integrados |
-| Website | Responsividade | IMPLEMENTED | CSS responsivo; sem auditoria formal de acessibilidade |
+| Website | Homepage alinhada à referência, secções de produto/preços | IMPLEMENTED | Visual; recorte transparente de servidores e nuvem; mensagem para programadores sobre Git/previews e acesso sem cartão; preços demonstrativos. Git, previews e pagamentos ainda não integrados |
+| Website e Console | Responsividade | IMPLEMENTED | Revistos em 360, 390, 768, 1024 e 1440 px; tabelas densas usam contentores com scroll horizontal |
 | Console | Dashboard conforme referência | IMPLEMENTED | Indicadores, gráfico, deploys, saúde, projectos e plano; valores locais demonstrativos |
 | Console | Lista de projectos | IMPLEMENTED | Pesquisa, filtros, arquivo/restauro, criação e edição locais |
 | Console | Lista de aplicações | IMPLEMENTED | Tabs, filtros, tabela, paginação, detalhes e operações simuladas |

@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+- Revistos os breakpoints responsivos do console: menu compacto a 850 px para evitar cortes em tablets, além de ajustes nas ferramentas do Marketplace para caberem sem overflow.
+
 - Actualizada a homepage com posicionamento para programadores: deploy via Git, pré-visualizações por alteração, suporte em português e pagamentos em Kz, usando a arte de infraestrutura fornecida.
 - Substituída a imagem estreita da hero pela nova arte panorâmica de servidores e nuvem, com enquadramento responsivo.
+- Removido o fundo da arte da hero, mantendo a nuvem e os servidores como PNG transparente e sem efeitos de fundo no contentor.
 - Acrescentada uma demonstração visual do fluxo de preview e uma indicação de que é possível explorar a plataforma sem cartão internacional; estas mensagens não representam integrações activas de Git, previews ou pagamentos.
 
 - Criada a página `/dashboard/status` conforme a referência, com uptime, estado por categoria, componentes, incidentes, manutenção, histórico e RSS demonstrativos.
