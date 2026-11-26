@@ -1,6 +1,20 @@
 # Changelog
 
+## 2026-11-26
+- Migrada a API de Next.js Route Handlers para NestJS em `apps/api`; a web continua em Next.js em `apps/web`, dentro do mesmo Turborepo.
+- Preservadas as rotas `/api` da web para autenticação, projectos, aplicações, deploy/preview condicionado ao Coolify, integração GitHub e facturação sem PSP activo.
+- Build de produção da API NestJS e build da web Next.js concluídos.
+
 ## Unreleased
+
+- Separadas a aplicação web e a API em `apps/web` e `apps/api`, cada uma com package próprio; npm workspaces e Turborepo orquestram dev/build, e a web encaminha `/api/*` para a API.
+
+- Adicionada persistência PostgreSQL/Prisma, registo/login/logout, sessões opacas e endpoints tenant-scoped para projectos, aplicações e facturas.
+- Projectos e aplicações do console passaram a carregar e gravar dados reais da organização; criar aplicação valida acesso à GitHub App instalada.
+- Implementado fluxo GitHub App com state assinado, consulta da instalação e tokens temporários de instalação mantidos exclusivamente no servidor.
+- Implementado início manual de deploy e preview por PR via API pública do Coolify, condicionado a configuração; operações não são chamadas sem credenciais.
+- Adicionado adapter de pagamentos que falha fechado até selecção/configuração de PSP; facturas não podem ser marcadas pagas pela UI.
+- Acrescentado aviso no console para módulos ainda demonstrativos, configuração local com Docker Compose e documentação de limites/credenciais.
 
 - Revistos os breakpoints responsivos do console: menu compacto a 850 px para evitar cortes em tablets, além de ajustes nas ferramentas do Marketplace para caberem sem overflow.
 

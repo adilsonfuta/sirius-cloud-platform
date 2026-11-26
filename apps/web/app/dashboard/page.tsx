@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import AccountControl from "../../components/AccountControl";
 import { Activity, Archive, ArrowRight, ArrowUpRight, Bell, BookOpen, Box, CalendarDays, Check, ChevronDown, CircleHelp, Code2, Command, CreditCard, Cloud, Database, Folder, Globe2, HardDrive, Home, Layers3, LifeBuoy, Menu, Moon, Plus, Search, Server, Settings2, ShieldCheck, ShoppingBag, Sparkles, X, Zap } from 'lucide-react';
 import './dashboard.css';
 
@@ -38,7 +39,7 @@ export default function Dashboard() {
   </aside>
   {menuOpen&&<button aria-label="Fechar navegação" className="ref-overlay" onClick={()=>setMenuOpen(false)}/>}
   <div className="ref-main">
-   <header className="ref-topbar"><button className="ref-mobile-menu" aria-label="Abrir menu" onClick={()=>setMenuOpen(true)}><Menu/></button><label className="global-search"><Search/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pesquisar projectos..."/><kbd><Command/> K</kbd></label><div className="ref-top-actions"><button className="round-action notification" aria-label="Notificações"><Bell/><i/></button><button className="round-action" aria-label="Alternar tema"><Moon/></button><button className="profile-button"><span className="profile-photo">JS</span><span><b>João Silva</b><small>joao@siriuscloud.ao</small></span><ChevronDown/></button></div></header>
+   <header className="ref-topbar"><button className="ref-mobile-menu" aria-label="Abrir menu" onClick={()=>setMenuOpen(true)}><Menu/></button><label className="global-search"><Search/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pesquisar projectos..."/><kbd><Command/> K</kbd></label><div className="ref-top-actions"><button className="round-action notification" aria-label="Notificações"><Bell/><i/></button><button className="round-action" aria-label="Alternar tema"><Moon/></button><AccountControl/></div></header>
    <section className="ref-content">
     <div className="ref-page-title"><div><h1>Bom dia, João Silva <span>👋</span></h1><p>Aqui está o resumo da sua infraestrutura na Sirius Cloud.</p></div><label className="period-select"><CalendarDays/><select value={period} onChange={e=>setPeriod(e.target.value)}><option>Últimas 24 horas</option><option>Últimos 7 dias</option><option>Últimos 30 dias</option></select><ChevronDown/></label></div>
     <div className="ref-metrics"><Metric icon={Layers3} label="Aplicações" value="3" trend="↑ +1" tone="pink"/><Metric icon={Database} label="Bases de dados" value="2" tone="cyan"/><Metric icon={Activity} label="CPU (média)" value="32%" progress={32} tone="blue"/><Metric icon={Server} label="Memória (média)" value="1,6 GB" suffix="/ 4 GB" progress={48} tone="pink"/></div>

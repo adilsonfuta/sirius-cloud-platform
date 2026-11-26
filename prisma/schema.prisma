@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum ApplicationState {
+  NEEDS_DEPLOY
+  DEPLOYING
+  RUNNING
+  STOPPED
+  FAILED
+}
+
+enum DeploymentState {
+  QUEUED
+  BUILDING
+  READY
+  FAILED
+  CANCELLED
+}
+
+enum InvoiceState {
+  DRAFT
+  PENDING
+  PAID
+  VOID
+}
+
+enum PaymentState {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  memberships  Membership[]
+  sessions     Session[]
+  auditLogs    AuditLog[]
+}
+
+model Organization {
+  id                    String       @id @default(cuid())
+  slug                  String       @unique
+  name                  String
+  githubInstallationId  String?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  memberships           Membership[]
+  sessions              Session[]
+  projects              Project[]
+  applications          Application[]
+  subscription          Subscription?
+  invoices              Invoice[]
+  paymentAttempts       PaymentAttempt[]
+  auditLogs             AuditLog[]
+}
+
+model Membership {
+  id             String         @id @default(cuid())
+  userId         String
+  organizationId String
+  role           MembershipRole @default(MEMBER)
+  createdAt      DateTime       @default(now())
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId, role])
+}
+
+model Session {
+  id             String       @id @default(cuid())
+  tokenHash      String       @unique
+  userId         String
+  organizationId String
+  expiresAt      DateTime
+  revokedAt      DateTime?
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([organizationId, expiresAt])
+}
+
+model Project {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+  description    String       @default("")
+  archivedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  applications   Application[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId, createdAt])
+}
+
+model Application {
+  id                  String           @id @default(cuid())
+  organizationId      String
+  projectId           String?
+  name                String
+  repositoryUrl       String
+  repositoryOwner     String
+  repositoryName      String
+  repositoryPrivate   Boolean          @default(false)
+  branch              String           @default("main")
+  buildPack           String           @default("nixpacks")
+  enablePreviews      Boolean          @default(true)
+  state               ApplicationState @default(NEEDS_DEPLOY)
+  coolifyUuid         String?
+  domain              String?
+  lastDeploymentAt    DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  organization        Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project             Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  deployments         Deployment[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId, createdAt])
+  @@index([projectId])
+  @@index([coolifyUuid])
+}
+
+model Deployment {
+  id                   String          @id @default(cuid())
+  applicationId        String
+  state                DeploymentState @default(QUEUED)
+  branch               String
+  pullRequestNumber    Int?
+  commitSha            String?
+  deploymentUuid       String?
+  previewUrl           String?
+  errorCode            String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  application          Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId, createdAt])
+  @@index([deploymentUuid])
+}
+
+model Subscription {
+  id               String       @id @default(cuid())
+  organizationId   String       @unique
+  planCode         String
+  status           String       @default("PENDING_CONFIGURATION")
+  monthlyAmountKz  Int?
+  currency         String       @default("AOA")
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id               String       @id @default(cuid())
+  organizationId   String
+  number           String       @unique
+  description      String
+  amountKz         Int
+  currency         String       @default("AOA")
+  state            InvoiceState @default(DRAFT)
+  dueAt            DateTime?
+  paidAt           DateTime?
+  createdAt        DateTime     @default(now())
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  attempts         PaymentAttempt[]
+
+  @@index([organizationId, state, createdAt])
+}
+
+model PaymentAttempt {
+  id               String       @id @default(cuid())
+  organizationId   String
+  invoiceId        String
+  provider         String
+  state            PaymentState @default(PENDING)
+  amountKz         Int
+  externalReference String?
+  checkoutUrl      String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invoice          Invoice      @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([invoiceId, state])
+}
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  actorId        String?
+  action         String
+  resourceType   String
+  resourceId     String?
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actor          User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([actorId, createdAt])
+}

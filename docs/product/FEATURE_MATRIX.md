@@ -1,29 +1,27 @@
 # Matriz de funcionalidades
 
-| Área | Funcionalidade | Estado | Tipo / observação |
+| Área | Funcionalidade | Estado | Limites actuais |
 |---|---|---|---|
-| Website | Homepage alinhada à referência, secções de produto/preços | IMPLEMENTED | Visual; recorte transparente de servidores e nuvem; mensagem para programadores sobre Git/previews e acesso sem cartão; preços demonstrativos. Git, previews e pagamentos ainda não integrados |
-| Website e Console | Responsividade | IMPLEMENTED | Revistos em 360, 390, 768, 1024 e 1440 px; tabelas densas usam contentores com scroll horizontal |
-| Console | Dashboard conforme referência | IMPLEMENTED | Indicadores, gráfico, deploys, saúde, projectos e plano; valores locais demonstrativos |
-| Console | Lista de projectos | IMPLEMENTED | Pesquisa, filtros, arquivo/restauro, criação e edição locais |
-| Console | Lista de aplicações | IMPLEMENTED | Tabs, filtros, tabela, paginação, detalhes e operações simuladas |
-| Console | Gestão de bases de dados | IMPLEMENTED | Lista demonstrativa, filtros, painel de detalhes, backups e operações locais |
-| Console | Gestão de domínios | IMPLEMENTED | Pesquisa de disponibilidade e gestão DNS/SSL simuladas; sem alterações externas |
-| Console | Gestão de armazenamento | IMPLEMENTED | Capacidade, buckets, backups, ficheiros, políticas e IAM; operações locais demonstrativas |
-| Console | Marketplace | IMPLEMENTED | Catálogo, pesquisa, categorias, filtros, detalhes e instalação local demonstrativa |
-| Console | Facturação | IMPLEMENTED | Subscrição, consumo, facturas, métodos e preferências locais; sem pagamentos reais |
-| Console | Suporte | IMPLEMENTED | Tickets, respostas, artigos, tutoriais, contactos e estado demonstrativos locais |
-| Console | Documentação | IMPLEMENTED | Guias, categorias, tutoriais, exemplos de API, boas práticas e FAQ locais |
-| Console | Status dos serviços | IMPLEMENTED | Uptime, componentes, incidentes, manutenção, histórico e feed demonstrativos locais |
-| Console | Navegação lateral | IN_PROGRESS | Dashboard, projectos, aplicações, bases de dados, domínios, armazenamento, Marketplace, Facturação, Suporte, Documentação e Status têm rotas próprias |
-| Console | Pesquisa de projectos e aplicações | IMPLEMENTED | Filtra listas demonstrativas locais |
-| Console | Filtro temporal do gráfico | IMPLEMENTED | Controlo visual/local; valores não variam com o período |
-| Console | Criar recurso/projecto/aplicação | IMPLEMENTED | Simulação local; não provisiona infraestrutura |
-| Auth | Login, registo, MFA, recuperação | NOT_STARTED | — |
-| API | REST, OpenAPI, validação | NOT_STARTED | — |
-| Multi-tenancy | Organizações, RBAC, isolamento | NOT_STARTED | — |
-| Billing | Subscrições, facturas, pagamentos | NOT_STARTED | — |
-| Provisionamento | Worker, filas e provider mock | NOT_STARTED | — |
-| Coolify | Adaptador verificado | NOT_STARTED | Capacidades não verificadas |
-| Admin | Backoffice | NOT_STARTED | — |
-| Observabilidade | Auditoria, logs e métricas | NOT_STARTED | — |
+| Website | Homepage alinhada à referência e responsiva | IMPLEMENTED | Preços e ofertas são referências visuais, não catálogo comercial activo |
+| Console | Layout responsivo e aviso de conteúdo ilustrativo | IMPLEMENTED | Módulos ainda sem ligação a providers continuam demonstrações |
+| Arquitectura | Web Next.js e API NestJS em workspaces independentes dentro de `apps/` no Turborepo | IMPLEMENTED | Web faz proxy de `/api/*`; serviços podem ser publicados separadamente |
+| Auth | Registo, login, logout e consulta da sessão | IMPLEMENTED | Sem verificação de email, MFA, recuperação de palavra-passe ou rate limit distribuído |
+| Auth | Palavra-passe scrypt, sessão opaca, cookie HttpOnly/SameSite e revogação | IMPLEMENTED | Requer TLS em produção; gestão de sessões activas ainda não existe |
+| API | Validação de entrada, autenticação e isolamento por organização | IMPLEMENTED (base) | NestJS em `apps/api`; sem OpenAPI, versionamento de API ou limites distribuídos |
+| Organizações | Criação da organização owner no registo | IMPLEMENTED (base) | Convites, multi-organização, troca de organização e RBAC completo pendentes |
+| Projectos | Listar, criar, editar, arquivar/restaurar e eliminar sem aplicações | IMPLEMENTED | PostgreSQL; contagens de bases de dados/ambientes ainda não integradas |
+| Aplicações | Registar/listar projectos GitHub autorizados por organização | IMPLEMENTED | Requer GitHub App e PostgreSQL configurados |
+| GitHub | Instalação com state assinado, JWT da App, tokens curtos e consulta de repositórios | IMPLEMENTED (integração condicionada) | Precisa de GitHub App própria; token nunca é devolvido à UI |
+| Coolify | Criar recurso e iniciar deploy manual; preview por PR | IMPLEMENTED (integração condicionada) | Requer token/API/UUIDs; sem sincronização de logs/estado ou deploy automático por push |
+| Billing | Criar/listar facturas persistentes em Kz/AOA por organização | IMPLEMENTED (base) | Sem emissão fiscal, impostos, catálogo comercial ou subscrições activas |
+| Pagamentos | Contrato adapter e recusa segura de checkout não configurado | SCAFFOLDED | PSP, credenciais, assinatura de webhook e reconciliação ainda não escolhidos |
+| Dados | PostgreSQL + Prisma schema e migration inicial | IMPLEMENTED | Serviço PostgreSQL deve ser iniciado/configurado pelo ambiente |
+| Bases de dados | Gestão de instâncias e backups | DEMO | Sem provider persistente ligado |
+| DNS/domínios | Pesquisa, zonas DNS e SSL | DEMO | Nenhuma alteração externa é feita |
+| Storage | Buckets, ficheiros e políticas | DEMO | Sem provider S3 ligado |
+| Marketplace | Catálogo e instalação | DEMO | Instalações não provisionam recursos |
+| Status, métricas e suporte | Painéis e acções | DEMO | Sem telemetria, tickets ou status page de produção |
+
+## Ambiente local e build
+
+Ver `docs/deployment/DEPLOYMENT.md`. A compilação de produção é verificada com `npm run build`; o banco local requer Docker/PostgreSQL.

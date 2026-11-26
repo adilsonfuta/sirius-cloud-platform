@@ -1,5 +1,9 @@
 node_modules/
+.turbo/
 .next/
+dist/
+apps/api/lib/*.js
+apps/api/lib/*.js.map
 out/
 *.tsbuildinfo
 .DS_Store
